@@ -124,6 +124,39 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+## Running the Engine
+
+After installation, you can run the engine using:
+```bash
+python3 main.py
+```
+
+This will:
+1. Load historical data for the configured stock (default: AAPL)
+2. Run backtests for all three strategies
+3. Generate performance analytics and visualizations
+4. Display results in both console output and graphical format
+
+### Pair Trading Analysis
+![Pair Trading Analysis](assets/pairTradingAnalysis.png)
+
+The above visualization shows:
+- Normalized price series comparing the stock vs benchmark
+- Price spread between the pairs
+- 60-day rolling correlation
+- Daily returns scatter analysis
+
+### Strategy Performance
+![Strategy Performance Comparison](assets/strategyPerformanceComparison.png)
+
+The performance comparison shows:
+- MeanReversionStrategy (Return: 14.5%)
+- MomentumStrategy (Return: 160.4%)
+- StatisticalArbitrageStrategy (Return: 0.0%)
+- Market performance as benchmark
+
+### Example Console Output
+
 ## Usage Examples
 
 ### Basic Backtesting
@@ -178,6 +211,55 @@ plot_pair_analysis(data, "AAPL-QQQ")
 plt.figure(figsize=(15, 7))
 plt.plot(results.index, results['cumulative_strategy'])
 plt.show()
+```
+
+### Example Output
+```bash
+[*********************100%***********************]  1 of 1 completed
+2025-02-09 10:54:32,845 - __main__ - INFO - Data loaded for AAPL
+[*********************100%***********************]  1 of 1 completed
+2025-02-09 10:54:33.551 Python[72050:155795071] +[IMKClient subclass]: chose IMKClient_Modern
+2025-02-09 10:54:33.551 Python[72050:155795071] +[IMKInputSession subclass]: chose IMKInputSession_Modern
+2025-02-09 10:54:47,731 - __main__ - INFO - Backtesting completed.
+2025-02-09 10:54:47,754 - __main__ - INFO - 
+MeanReversionStrategy Analysis:
+2025-02-09 10:54:47,755 - __main__ - INFO - Tail Risk Metrics:
+2025-02-09 10:54:47,755 - __main__ - INFO - - historical_var: -1.77%
+2025-02-09 10:54:47,755 - __main__ - INFO - - parametric_var: -2.15%
+2025-02-09 10:54:47,755 - __main__ - INFO - - conditional_var: -3.27%
+2025-02-09 10:54:47,755 - __main__ - INFO - - evt_var: -0.09%
+2025-02-09 10:54:47,755 - __main__ - INFO - 
+Drawdown Analysis:
+2025-02-09 10:54:47,755 - __main__ - INFO - - max_drawdown: -30.62%
+2025-02-09 10:54:47,755 - __main__ - INFO - - average_drawdown: -10.15%
+2025-02-09 10:54:47,755 - __main__ - INFO - - average_recovery_time: 189.8 days
+2025-02-09 10:54:47,755 - __main__ - INFO - - drawdown_frequency: 0.40%
+2025-02-09 10:54:47,764 - __main__ - INFO - 
+MomentumStrategy Analysis:
+2025-02-09 10:54:47,764 - __main__ - INFO - Tail Risk Metrics:
+2025-02-09 10:54:47,764 - __main__ - INFO - - historical_var: -2.98%
+2025-02-09 10:54:47,764 - __main__ - INFO - - parametric_var: -3.19%
+2025-02-09 10:54:47,764 - __main__ - INFO - - conditional_var: -4.48%
+2025-02-09 10:54:47,764 - __main__ - INFO - - evt_var: -0.05%
+2025-02-09 10:54:47,764 - __main__ - INFO - 
+Drawdown Analysis:
+2025-02-09 10:54:47,764 - __main__ - INFO - - max_drawdown: -36.67%
+2025-02-09 10:54:47,764 - __main__ - INFO - - average_drawdown: -11.58%
+2025-02-09 10:54:47,764 - __main__ - INFO - - average_recovery_time: 33.2 days
+2025-02-09 10:54:47,764 - __main__ - INFO - - drawdown_frequency: 3.66%
+2025-02-09 10:54:47,765 - __main__ - INFO - 
+StatisticalArbitrageStrategy Analysis:
+2025-02-09 10:54:47,765 - __main__ - INFO - Tail Risk Metrics:
+2025-02-09 10:54:47,765 - __main__ - INFO - - historical_var: 0.00%
+2025-02-09 10:54:47,765 - __main__ - INFO - - parametric_var: nan%
+2025-02-09 10:54:47,765 - __main__ - INFO - - conditional_var: 0.00%
+2025-02-09 10:54:47,765 - __main__ - INFO - - evt_var: 0.00%
+2025-02-09 10:54:47,765 - __main__ - INFO - 
+Drawdown Analysis:
+2025-02-09 10:54:47,765 - __main__ - INFO - - max_drawdown: 0.00%
+2025-02-09 10:54:47,765 - __main__ - INFO - - average_drawdown: 0.00%
+2025-02-09 10:54:47,765 - __main__ - INFO - - average_recovery_time: 0.0 days
+2025-02-09 10:54:47,765 - __main__ - INFO - - drawdown_frequency: 0.00%
 ```
 
 ## Contributing

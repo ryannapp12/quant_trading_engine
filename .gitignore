@@ -1,17 +1,51 @@
-# Python cache files
+# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Virtual environment
+# Virtual Environment
 venv/
+ENV/
+env/
 
-# SQLite database
-data/market_data.db
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.project
+.pydevproject
+.settings
 
-# MacOS system files
+# Editor History
+.history
+*.history
+
+# Local Data
+data/
+*.db
+*.sqlite3
+
+# Logs
+*.log
+
+# OS specific
 .DS_Store
-
-# VSCode settings (optional)
-.vscode/.history/
+Thumbs.db
