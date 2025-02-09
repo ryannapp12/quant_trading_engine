@@ -1,0 +1,17 @@
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+
+# SQLite database
+data/market_data.db
+
+# MacOS system files
+.DS_Store
+
+# VSCode settings (optional)
+.vscode/
