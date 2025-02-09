@@ -39,21 +39,24 @@ class YahooDataProvider(DataProvider):
         return conn
 
     def _save_to_db(self, data: pd.DataFrame, conn: sqlite3.Connection) -> None:
-        df = data.copy()
-        df = df.reset_index()
-
-        # Convert all column names to lowercase strings
-        df.columns = [str(col).lower() for col in df.columns]
+        df = data.reset_index()
         
-        # Rename the date column if needed
-        if 'datetime' in df.columns:
+        # Handle column names
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = [col[1] if isinstance(col, tuple) else col for col in df.columns]
+        
+        # Convert all column names to lowercase
+        df.columns = [col.lower() for col in df.columns]
+        
+        # Ensure date column is properly named
+        if 'date' not in df.columns and 'datetime' in df.columns.str.lower():
             df.rename(columns={'datetime': 'date'}, inplace=True)
         
         # Add ticker column
         df['ticker'] = self.ticker
         
         # Write to SQLite
-        df.to_sql('market_data', conn, if_exists='replace', index=False)
+        df.to_sql('market_data', conn, if_exists='append', index=False)
 
     def _load_from_db(self, conn: sqlite3.Connection) -> Optional[pd.DataFrame]:
         query = f"""
@@ -72,23 +75,16 @@ class YahooDataProvider(DataProvider):
             conn.close()
             return cached
             
-        try:
-            # Download data from Yahoo Finance
-            data = yf.download(self.ticker, start=self.start_date, end=self.end_date)
-            
-            # Convert column names to lowercase strings
-            if isinstance(data.columns, pd.MultiIndex):
-                # Handle MultiIndex columns
-                data.columns = [str(col[0]).lower() for col in data.columns]
-            else:
-                # Handle regular Index columns
-                data.columns = [str(col).lower() for col in data.columns]
-            
-            # Save to database
-            self._save_to_db(data, conn)
-            conn.close()
-            return data
-            
-        except Exception as e:
-            conn.close()
-            raise Exception(f"Error downloading data for {self.ticker}: {str(e)}")
+        # Download data from Yahoo Finance
+        data = yf.download(self.ticker, start=self.start_date, end=self.end_date)
+        
+        # Select only the columns we need
+        required_cols = ['Open', 'High', 'Low', 'Close', 'Volume']
+        data = data[required_cols]
+        
+        # Ensure columns are properly handled
+        data.columns = [col.lower() for col in data.columns]
+        
+        self._save_to_db(data, conn)
+        conn.close()
+        return data

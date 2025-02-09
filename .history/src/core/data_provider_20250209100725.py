@@ -1,5 +1,3 @@
-# src/core/data_provider.py
-
 import os
 import sqlite3
 import pandas as pd
@@ -39,21 +37,24 @@ class YahooDataProvider(DataProvider):
         return conn
 
     def _save_to_db(self, data: pd.DataFrame, conn: sqlite3.Connection) -> None:
-        df = data.copy()
-        df = df.reset_index()
+        df = data.reset_index()
 
-        # Convert all column names to lowercase strings
-        df.columns = [str(col).lower() for col in df.columns]
-        
-        # Rename the date column if needed
-        if 'datetime' in df.columns:
-            df.rename(columns={'datetime': 'date'}, inplace=True)
-        
-        # Add ticker column
+        # If the columns are a MultiIndex, flatten by taking the first level.
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = [col[0] for col in df.columns]
+
+        # Convert all column names to lowercase.
+        df.columns = [col.lower() for col in df.columns]
+
+        # Ensure that the first column is named 'date'.
+        if df.columns[0] != 'date':
+            df.rename(columns={df.columns[0]: 'date'}, inplace=True)
+
+        # Add the ticker column.
         df['ticker'] = self.ticker
-        
-        # Write to SQLite
-        df.to_sql('market_data', conn, if_exists='replace', index=False)
+
+        # Write the DataFrame to the SQLite table.
+        df.to_sql('market_data', conn, if_exists='append', index=False)
 
     def _load_from_db(self, conn: sqlite3.Connection) -> Optional[pd.DataFrame]:
         query = f"""
@@ -67,28 +68,12 @@ class YahooDataProvider(DataProvider):
     def load_data(self) -> pd.DataFrame:
         conn = self._init_db()
         cached = self._load_from_db(conn)
-        
         if cached is not None:
             conn.close()
             return cached
-            
-        try:
-            # Download data from Yahoo Finance
-            data = yf.download(self.ticker, start=self.start_date, end=self.end_date)
-            
-            # Convert column names to lowercase strings
-            if isinstance(data.columns, pd.MultiIndex):
-                # Handle MultiIndex columns
-                data.columns = [str(col[0]).lower() for col in data.columns]
-            else:
-                # Handle regular Index columns
-                data.columns = [str(col).lower() for col in data.columns]
-            
-            # Save to database
-            self._save_to_db(data, conn)
-            conn.close()
-            return data
-            
-        except Exception as e:
-            conn.close()
-            raise Exception(f"Error downloading data for {self.ticker}: {str(e)}")
+        data = yf.download(self.ticker, start=self.start_date, end=self.end_date)[['Open', 'High', 'Low', 'Close', 'Volume']]
+        # Normalize column names to lowercase for consistency.
+        data.columns = [col.lower() for col in data.columns]
+        self._save_to_db(data, conn)
+        conn.close()
+        return data

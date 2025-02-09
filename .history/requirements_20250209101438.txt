@@ -4,7 +4,10 @@ numpy
 matplotlib
 scipy
 statsmodels
+scipy
+statsmodels
 scikit-learn
 pytest
 seaborn
 pandas_ta
+empyrical

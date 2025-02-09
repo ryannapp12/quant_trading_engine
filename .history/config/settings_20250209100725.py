@@ -2,13 +2,13 @@
 
 DEFAULT_TICKER = 'AAPL'
 DEFAULT_START_DATE = '2020-01-01'
-DEFAULT_END_DATE = '2025-01-01'
+DEFAULT_END_DATE = '2021-01-01'
 INITIAL_CAPITAL = 100000.0
 DB_PATH = 'data/market_data.db'
 
 # Data provider selection: 'yahoo' or 'csv'
-DATA_PROVIDER = 'yahoo'
-CSV_FILE_PATH = 'data/AAPL.csv'
+DATA_PROVIDER = 'yahoo'  # change to 'csv' to use CSVDataProvider
+CSV_FILE_PATH = 'data/AAPL.csv'  # path to CSV file if using CSVDataProvider
 
 # Strategy configuration
 STRATEGY_CONFIG = {
