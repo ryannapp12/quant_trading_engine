@@ -1,5 +1,4 @@
 # src/strategies/base_strategy.py
-
 from abc import ABC, abstractmethod
 import pandas as pd
 

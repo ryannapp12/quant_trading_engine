@@ -8,3 +8,8 @@ scikit-learn
 pytest
 seaborn
 pandas_ta
+dash
+plotly
+tensorflow
+alpaca_trade_api
+python-dotenv
