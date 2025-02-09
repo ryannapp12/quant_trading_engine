@@ -14,4 +14,4 @@ data/market_data.db
 .DS_Store
 
 # VSCode settings (optional)
-.vscode/
+.vscode/.history/
