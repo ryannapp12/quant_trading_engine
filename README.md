@@ -80,7 +80,7 @@ All components are built with a focus on code quality, testing, and extensibilit
 
 ### Step 1: Clone the Repository
 ```bash
-git clone https://github.com/yourusername/quant_trading_project.git
+git clone https://github.com/ryannapp12/quant_trading_engine.git
 cd quant_trading_project
 ```
 
